@@ -38,17 +38,9 @@ public class TestChrome {
         this.driver.quit();
     }
 
-    @Test
-    public void test() {
-        System.out.println("hello");
-        this.driver.get("http://www.google.com");
-        final WebElement element = this.driver.findElement(By.name("q"));
-        element.sendKeys("Cheese!");
-        element.submit();
-        final File srcFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
-
+    public void safeFile(final String fileName, final File srcFile) {
         try {
-            final OutputStream oos = new FileOutputStream("D:/test.png");
+            final OutputStream oos = new FileOutputStream(fileName);
             final byte[] buf = new byte[8192];
             final InputStream is = new FileInputStream(srcFile);
             int c = 0;
@@ -65,6 +57,18 @@ public class TestChrome {
         } catch (final IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test() {
+        System.out.println("hello");
+        this.driver.get("http://www.google.com");
+        final WebElement element = this.driver.findElement(By.name("q"));
+        element.sendKeys("Cheese!");
+        element.submit();
+        final File srcFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
+
+        safeFile("D:/test.png", srcFile);
 
         System.out.println("Page title is: " + this.driver.getTitle());
         (new WebDriverWait(this.driver, 10)).until(new ExpectedCondition<Boolean>() {
@@ -85,11 +89,15 @@ public class TestChrome {
         element.sendKeys("baha");
         element.submit();
         System.out.println("Page title is: " + this.driver.getTitle());
+
+        final File srcFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
         //        (new WebDriverWait(this.driver, 10)).until(new ExpectedCondition<Boolean>() {
         //            public Boolean apply(final WebDriver d) {
         //                return d.getTitle().toLowerCase().startsWith("cheese!");
         //            }
         //        });
+
+        safeFile("D:/test1.png", srcFile);
         System.out.println("Page title is: " + this.driver.getTitle());
     }
 
