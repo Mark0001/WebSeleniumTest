@@ -21,6 +21,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import util.FileUtil;
+
 public class TestChrome {
 
     WebDriver driver;
@@ -38,27 +40,6 @@ public class TestChrome {
         this.driver.quit();
     }
 
-    public void safeFile(final String fileName, final File srcFile) {
-        try {
-            final OutputStream oos = new FileOutputStream(fileName);
-            final byte[] buf = new byte[8192];
-            final InputStream is = new FileInputStream(srcFile);
-            int c = 0;
-            while ((c = is.read(buf, 0, buf.length)) > 0) {
-                oos.write(buf, 0, c);
-                oos.flush();
-            }
-
-            oos.close();
-            System.out.println("stop");
-            is.close();
-        } catch (final FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Test
     public void test() {
         System.out.println("hello");
@@ -68,7 +49,7 @@ public class TestChrome {
         element.submit();
         final File srcFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
 
-        safeFile("D:/test.png", srcFile);
+        FileUtil.I.safeFile("D:/test.png", srcFile);
 
         System.out.println("Page title is: " + this.driver.getTitle());
         (new WebDriverWait(this.driver, 10)).until(new ExpectedCondition<Boolean>() {
@@ -97,7 +78,7 @@ public class TestChrome {
         //            }
         //        });
 
-        safeFile("D:/test1.png", srcFile);
+        FileUtil.I.safeFile("D:/test1.png", srcFile);
         System.out.println("Page title is: " + this.driver.getTitle());
     }
 
