@@ -1,6 +1,9 @@
 package com;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,9 +24,31 @@ public class TestChrome {
 
     WebDriver driver;
 
+    Properties properties;
+
+    String saveLocation;
+
+    public TestChrome() {
+        final InputStream is = this.getClass().getResourceAsStream("/setting.properties");
+
+        this.properties = new Properties();
+
+        try {
+            this.properties.load(is);
+            is.close();
+
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
+        this.saveLocation = this.properties.getProperty("saveLocaation");
+    }
+
     @Before
     public void setUp() {
-        System.setProperty("webdriver.gecko.driver", "D:/chromedriver.exe");
+
+        //        System.setProperty("webdriver.gecko.driver", "D:/chromedriver.exe");
+        System.setProperty("webdriver.gecko.driver", this.properties.getProperty("webDriver"));
         final ChromeOptions options = new ChromeOptions();
         this.driver = new ChromeDriver(options);
     }
@@ -43,7 +68,7 @@ public class TestChrome {
         element.submit();
         final File srcFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
 
-        FileUtil.I.safeFile("D:/test.png", srcFile);
+        FileUtil.I.safeFile(this.saveLocation + "test.png", srcFile);
 
         System.out.println("Page title is: " + this.driver.getTitle());
         (new WebDriverWait(this.driver, 10)).until(new ExpectedCondition<Boolean>() {
@@ -72,7 +97,7 @@ public class TestChrome {
         //            }
         //        });
 
-        FileUtil.I.safeFile("D:/test1.png", srcFile);
+        FileUtil.I.safeFile(this.saveLocation + "test1.png", srcFile);
         System.out.println("Page title is: " + this.driver.getTitle());
     }
 
