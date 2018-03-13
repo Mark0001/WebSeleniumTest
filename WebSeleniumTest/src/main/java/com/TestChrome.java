@@ -1,9 +1,6 @@
 package com;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,37 +15,24 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import util.ConfigUtil;
 import util.FileUtil;
 
 public class TestChrome {
 
     WebDriver driver;
 
-    Properties properties;
-
     String saveLocation;
 
     public TestChrome() {
-        final InputStream is = this.getClass().getResourceAsStream("/setting.properties");
 
-        this.properties = new Properties();
-
-        try {
-            this.properties.load(is);
-            is.close();
-
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
-        this.saveLocation = this.properties.getProperty("saveLocaation");
+        this.saveLocation = ConfigUtil.I.getCodeFromKey("saveLocaation");
     }
 
     @Before
     public void setUp() {
 
-        //        System.setProperty("webdriver.gecko.driver", "D:/chromedriver.exe");
-        System.setProperty("webdriver.gecko.driver", this.properties.getProperty("webDriver"));
+        System.setProperty("webdriver.gecko.driver", ConfigUtil.I.getCodeFromKey("webDriver"));
         final ChromeOptions options = new ChromeOptions();
         this.driver = new ChromeDriver(options);
     }
